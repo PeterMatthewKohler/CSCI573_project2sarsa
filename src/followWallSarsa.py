@@ -360,7 +360,6 @@ def main():
                     secondAction = random.choice(listActions)
 
                 # Update Q table for this action
-                priorQ = Q_TABLE[]
                 updateQTable(prevState, reward, firstAction, secondAction, discountFactor, learningRate)
                 # Action <- Action'
                 firstAction = secondAction
@@ -384,8 +383,9 @@ def main():
                     f = open("/home/hcr-student/Stingray-Simulation/catkin_ws/src/project2sarsa/src/reward_storage.py", "w")
                     f.write("Reward Data from Training = " + str(rewardData))
                     f.close()
-                    print("\n Q_Learning Complete, Q Table and reward data saved.")
-                    print("\n FOR ERROR TESTING: " + str(rewardData))
+                    f = open("/home/hcr-student/Stingray-Simulation/catkin_ws/src/project2sarsa/src/qConvergence_storage.py", "w")
+                    f.write("qConvergence = " + str(qConvergence))
+                    print("\n Q_Learning Complete, Q Table, Q Table Convergence data, and reward data saved.")
 
                 # Update number of timesteps by one
                 timestep += 1
