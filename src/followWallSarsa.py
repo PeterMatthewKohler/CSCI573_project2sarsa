@@ -177,6 +177,7 @@ def updateQTable(prevState, reward, firstAction, secondAction, discountFactor, l
 
 
 def resetRobot():
+    print("\n Resetting robot position.")
     # Reset at position (0,0,0) with orientation of (0,0,0,1)
     msg_state.pose.position.x = 0
     msg_state.pose.position.y = 0
@@ -267,7 +268,7 @@ def doGreedyAction(prevState, duration):
 # Main Function for Performing Training or Using Best Trained Policy
 def main():
     # Initialize ROS node
-    rospy.init_node("wallFollow", anonymous=True)
+    rospy.init_node("wallFollowSarsa", anonymous=True)
 
     # Initialization variables
     trainingDone = False                    # Logic Variable to determine when to exit loop
@@ -316,7 +317,6 @@ def main():
             for key in Q_TABLE:
                 sum += Q_TABLE[key]["turn_left"] + Q_TABLE[key]["go_forward"] + Q_TABLE[key]["turn_right"]
             qConvergence.append((episodeNumber, sum))
-            print("qConvergence: ", (episodeNumber, sum))
         # Reset accrued episode reward and timesteps elapsed
         episodeReward = 0
         timestepsThisEpisode = 0
@@ -332,9 +332,11 @@ def main():
         while not terminate and not trainingDone:
             # If training, perform SARSA on-policy TD control
             if sarsa:
-                # Timestep and State Printing for Error catching
+                # Timestep, State, and Epsilon printing for Error catching/User Observation
                 print("\n Timestep = ", timestep, "Episode Number = ", episodeNumber)
                 print("\n Current State is: ", "Right = ", robot_state.Right, " RightFront = ", robot_state.RightFront, " Front = ", robot_state.Front, " Left = ", robot_state.Left)
+                print("\n Epsilon = ", epsilon)
+                print("\n -----------------")
                 # Update Prior State
                 prevState.Right = robot_state.Right
                 prevState.RightFront = robot_state.RightFront
@@ -366,13 +368,11 @@ def main():
                 # Update Longest Episode Counter
                 if timestepsThisEpisode > longestEpisode:
                     longestEpisode = timestepsThisEpisode
-                # Epsilon and Longest Episode Printing for Error catching
-                print("\n Epsilon = ", epsilon)
-                print("\n Longest Episode (seconds) = ", longestEpisode*0.5)
+ 
                 # Determine if robot is trapped, if so terminate the episode
                 if (max(prevPose[0]) - min(prevPose[0])) < 0.05 and (max(prevPose[1]) - min(prevPose[1])) < 0.05 or pose_z > 0.05:
+                    print("\n Stuck.")
                     terminate = True
-                    print("\n Trapped. Resetting robot position...")
                 # Declare training done after 20000 timesteps total or 10000 timesteps in a single episode
                 elif timestep > 20000 or timestepsThisEpisode > 10000: 
                     trainingDone = True
