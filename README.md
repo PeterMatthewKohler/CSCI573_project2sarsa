@@ -1,7 +1,7 @@
 # CSCI 573 Project 2 SARSA
 # This ROS Package uses the SARSA algorithm to learn to follow a wall, or uses a previously trained policy to follow a wall in a simulated environment.
 
-To install and run this package please do the following:	\
+To install and run this package please do the following:
 
 1.) Ensure the stingray simulation package is properly installed by following all of the instructions at https://gitlab.com/HCRLab/stingray-robotics/Stingray-Simulation	\
 2.) Go to the catkin_ws/src folder in wherever you installed your stingray simulation.	\
