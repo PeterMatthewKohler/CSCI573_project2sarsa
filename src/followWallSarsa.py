@@ -335,8 +335,7 @@ def main():
                 # Timestep, State, and Epsilon printing for Error catching/User Observation
                 print("\n Timestep = ", timestep, "Episode Number = ", episodeNumber)
                 print("\n Current State is: ", "Right = ", robot_state.Right, " RightFront = ", robot_state.RightFront, " Front = ", robot_state.Front, " Left = ", robot_state.Left)
-                print("\n Epsilon = ", epsilon)
-                print("\n -----------------")
+
                 # Update Prior State
                 prevState.Right = robot_state.Right
                 prevState.RightFront = robot_state.RightFront
@@ -347,6 +346,8 @@ def main():
                 prevPose[1][timestep % numTrappedStates] = pose_y
                 # Update Epsilon
                 epsilon = epsilon_0 * (d ** episodeNumber)
+                print("\n Epsilon = ", epsilon)
+                print("\n -----------------")
                 # Take Action, observe reward and new state (S') (robot_state updated automatically via callback)
                 doDefinedAction(firstAction, timestepDuration)
                 # Incrememt number of timesteps this episode
@@ -374,14 +375,14 @@ def main():
                     print("\n Stuck.")
                     terminate = True
                 # Declare training done after 20000 timesteps total or 10000 timesteps in a single episode
-                elif timestep > 20000 or timestepsThisEpisode > 10000: 
+                elif timestep > 30000 or timestepsThisEpisode > 10000: 
                     trainingDone = True
                     # Write Q_Learning policy and reward data to storage files
                     f = open("/home/hcr-student/Stingray-Simulation/catkin_ws/src/project2sarsa/src/qtable_storage.py", "w")
                     f.write("Q_TABLE = " + str(Q_TABLE))
                     f.close()
                     f = open("/home/hcr-student/Stingray-Simulation/catkin_ws/src/project2sarsa/src/reward_storage.py", "w")
-                    f.write("Reward Data from Training = " + str(rewardData))
+                    f.write("reward = " + str(rewardData))
                     f.close()
                     f = open("/home/hcr-student/Stingray-Simulation/catkin_ws/src/project2sarsa/src/qConvergence_storage.py", "w")
                     f.write("qConvergence = " + str(qConvergence))
